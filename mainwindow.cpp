@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     txt = new QTextEdit(this);
     txt->setFont(QFont("Courier New"));
+    txt->setStyleSheet("border: none");
     h = new highlighter(txt->document());
 
     QMenu *file = this->menuBar()->addMenu(tr("&File"));
@@ -48,8 +49,12 @@ void MainWindow::closeEvent(QCloseEvent *)
 
 void MainWindow::resizeEvent(QResizeEvent *)
 {
-    txt->setGeometry(0, 0, this->width(), this->height() - 201);
-    txterr->setGeometry(0, this->height() - 200, this->width(), 200);
+    int offset = 0;
+#ifndef Q_OS_MAC
+    offset = menuBar()->height();
+#endif
+    txt->setGeometry(0, offset, this->width(), this->height() - 200 - offset);
+    txterr->setGeometry(-1, this->height() - 200, this->width() + 2, 201);
 }
 
 void MainWindow::checkError()
